@@ -1,12 +1,11 @@
-version: '3.9'
+version: '3'
 
 services:
-  ui:
+  frontend:
     build: ./ui
-    container_name: react-ui
     restart: always
     ports:
-      - "3000:5173"
+      - '3000:5173'
     volumes:
       - ./ui:/app
       - /app/node_modules
@@ -15,23 +14,23 @@ services:
 
   api:
     build: ./api
-    container_name: auth-api
     restart: always
     ports:
-      - "5062:8080"
+      - '5062:8080'
+    environment:
+      ConnectionStrings__DefaultConnection: "Server=db;Database=AuthDb;User Id=sa;Password=YourStrong@Pass123;TrustServerCertificate=True"
     depends_on:
       - db
 
   db:
     image: mcr.microsoft.com/mssql/server:2022-latest
     platform: linux/amd64
-    container_name: mssql-db
     restart: always
     environment:
       SA_PASSWORD: "YourStrong@Pass123"
       ACCEPT_EULA: "Y"
     ports:
-      - "1433:1433"
+      - '1433:1433'
     volumes:
       - sql_data:/var/opt/mssql
 
